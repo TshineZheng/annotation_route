@@ -6,28 +6,23 @@
 
 import 'dart:convert';
 import 'package:annotation_route/route.dart';
+import 'package:annotation_route/example/page_b.dart';
 import 'package:annotation_route/example/page_a.dart';
 import 'package:annotation_route/example/page_d.dart';
-import 'package:annotation_route/example/page_b.dart';
 import 'package:annotation_route/example/page_c.dart';
-
-abstract class ARouterInternal {
-  bool hasPageConfig(ARouteOption option);
-  ARouterResult findPage(ARouteOption option, dynamic initOption);
-}
 
 class ARouterInternalImpl extends ARouterInternal {
   ARouterInternalImpl();
   final Map<String, List<Map<String, dynamic>>> innerRouterMap =
       <String, List<Map<String, dynamic>>>{
+    'myapp://pageb': [
+      {'clazz': B, 'params': '{"parama":"b"}'}
+    ],
     'myapp://pagea': [
       {'clazz': A}
     ],
     'myapp://paged': [
       {'clazz': D, 'params': '{"parama":"d"}'}
-    ],
-    'myapp://pageb': [
-      {'clazz': B, 'params': '{"parama":"b"}'}
     ],
     'myapp://pagec': [
       {'clazz': C}
@@ -58,12 +53,12 @@ class ARouterInternalImpl extends ARouterInternal {
 
   dynamic instanceFromClazz(Type clazz, dynamic option) {
     switch (clazz) {
+      case B:
+        return new B(option);
       case A:
         return new A(option);
       case D:
         return new D(option);
-      case B:
-        return new B(option);
       case C:
         return new C(option);
       default:
@@ -109,9 +104,9 @@ class ARouterInternalImpl extends ARouterInternal {
           if (null != params) {
             bool match = true;
             final Function matchParams = (String k, dynamic v) {
-              if (params[k] != option?.params[k]) {
+              if (!option.params.containsKey(k)) {
                 match = false;
-                print('not match:A{params[k]}:A{option?.params[k]}');
+                print('router {${option.urlpattern}} key not match:$k');
               }
             };
             params.forEach(matchParams);
