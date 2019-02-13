@@ -4,31 +4,30 @@
 // RouteWriterGenerator
 // **************************************************************************
 
-import 'dart:convert';
 import 'package:annotation_route/route.dart';
-import 'package:annotation_route/example/page_b.dart';
 import 'package:annotation_route/example/page_a.dart';
-import 'package:annotation_route/example/page_d.dart';
+import 'package:annotation_route/example/page_b.dart';
 import 'package:annotation_route/example/page_c.dart';
+import 'package:annotation_route/example/page_d.dart';
 
 class ARouterInternalImpl extends ARouterInternal {
   ARouterInternalImpl();
   final Map<String, List<Map<String, dynamic>>> innerRouterMap =
       <String, List<Map<String, dynamic>>>{
-    'myapp://pageb': [
-      {'clazz': B, 'params': '{"parama":"b"}'}
-    ],
     'myapp://pagea': [
       {'clazz': A}
     ],
-    'myapp://paged': [
-      {'clazz': D, 'params': '{"parama":"d"}'}
+    'myapp://pageb': [
+      {'clazz': B, 'params': 'parama,b'}
     ],
     'myapp://pagec': [
       {'clazz': C}
     ],
     'myapp://pagec_alias': [
       {'clazz': C}
+    ],
+    'myapp://paged': [
+      {'clazz': D, 'params': 'parama,d'}
     ]
   };
 
@@ -53,14 +52,14 @@ class ARouterInternalImpl extends ARouterInternal {
 
   dynamic instanceFromClazz(Type clazz, dynamic option) {
     switch (clazz) {
-      case B:
-        return new B(option);
       case A:
         return new A(option);
-      case D:
-        return new D(option);
+      case B:
+        return new B(option);
       case C:
         return new C(option);
+      case D:
+        return new D(option);
       default:
         return null;
     }
@@ -95,15 +94,10 @@ class ARouterInternalImpl extends ARouterInternal {
         final Map<String, dynamic> pageConfig = pageConfigList[i];
         final String paramsString = pageConfig['params'];
         if (null != paramsString) {
-          Map<String, dynamic> params;
-          try {
-            params = json.decode(paramsString);
-          } catch (e) {
-            print('not found A{pageConfig};');
-          }
+          List<String> params = paramsString.split(',');
           if (null != params) {
             bool match = true;
-            final Function matchParams = (String k, dynamic v) {
+            final Function matchParams = (String k) {
               if (!option.params.containsKey(k)) {
                 match = false;
                 print('router {${option.urlpattern}} key not match:$k');

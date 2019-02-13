@@ -1,7 +1,7 @@
 class ARoute {
   final String desc;
   final String url;
-  final Map<String, dynamic> params;
+  final List<String> params;
   final List<ARouteAlias> alias;
   const ARoute({this.desc, this.url, this.params, this.alias});
 }
@@ -13,7 +13,7 @@ class ARouteRoot {
 class ARouteAlias {
   final String desc;
   final String url;
-  final Map<String, dynamic> params;
+  final List<String> params;
   const ARouteAlias({this.desc, this.url, this.params});
 }
 

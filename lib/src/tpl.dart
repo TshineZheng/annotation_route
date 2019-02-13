@@ -1,5 +1,4 @@
 const String clazzTpl = """
-import 'dart:convert';
 import 'package:annotation_route/route.dart';
 {{#refs}}
 import '{{{path}}}';
@@ -58,15 +57,10 @@ class ARouterInternalImpl extends ARouterInternal {
             final Map<String, dynamic> pageConfig = pageConfigList[i];
             final String paramsString = pageConfig['params'];
             if (null != paramsString) {
-              Map<String, dynamic> params;
-              try {
-                params = json.decode(paramsString);
-              } catch (e) {
-                print('not found A{pageConfig};');
-              }
+              List<String> params = paramsString.split(',');
               if (null != params) {
                 bool match = true;
-                final Function matchParams = (String k, dynamic v) {
+                final Function matchParams = (String k) {
                   if(!option.params.containsKey(k)){
                     match = false;
                     print('router {\${option.urlpattern}} key not match:\$k');

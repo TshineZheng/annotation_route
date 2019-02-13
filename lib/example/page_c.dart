@@ -1,3 +1,4 @@
+import 'package:annotation_route/example/router.route.dart';
 import 'package:annotation_route/route.dart';
 
 @ARoute(alias: [
@@ -7,5 +8,5 @@ import 'package:annotation_route/route.dart';
 class C {
   int a;
   String b;
-  C(ARouteOption option) : super();
+  C(MyRouteOption option) : super();
 }

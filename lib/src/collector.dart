@@ -1,5 +1,3 @@
-import 'dart:convert' hide JsonDecoder;
-
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/src/builder/build_step.dart';
 import 'package:source_gen/source_gen.dart';
@@ -23,6 +21,12 @@ class Collector {
     return map.map((DartObject k, DartObject v) {
       return MapEntry<String, String>(k.toStringValue(), v.toStringValue());
     });
+  }
+
+  List<String> toStringList(List<DartObject> list){
+    return list.map((f){
+      return f.toStringValue();
+    }).toList();
   }
 
   void collect(
@@ -67,8 +71,18 @@ class Collector {
     final ConstantReader params = reader.peek('params');
     final Map<String, dynamic> map = <String, dynamic>{wK('clazz'): className};
     if (params != null) {
-      final Map<String, String> paramsMap = toStringStringMap(params.mapValue);
-      map[wK('params')] = "${wK(json.encode(paramsMap))}";
+      final List<String> paramsMap = toStringList(params.listValue);
+
+      StringBuffer buffer = new StringBuffer();
+      paramsMap.forEach((v){
+        if(buffer.length > 0){
+          buffer.write(',');
+        }
+        buffer.write(v);
+      });
+      buffer.toString();
+
+      map[wK('params')] = "${wK(buffer.toString())}";
     }
     return map;
   }
