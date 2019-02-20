@@ -61,7 +61,7 @@ class ARouterInternalImpl extends ARouterInternal {
               if (null != params) {
                 bool match = true;
                 final Function matchParams = (String k) {
-                  if(!option.params.containsKey(k)){
+                  if(option.params == null || !option.params.containsKey(k)){
                     match = false;
                     print('router {\${option.urlpattern}} key not match:\$k');
                   }
